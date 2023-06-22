@@ -6,9 +6,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.particle.ParticleEffect;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import org.apache.logging.log4j.Level;
@@ -18,6 +20,7 @@ import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public abstract class AbstractMoobloom {
 	private static final Logger LOGGER = LogManager.getLogger("Mooblooms API");
@@ -74,8 +77,8 @@ public abstract class AbstractMoobloom {
 		return this.settings.ignoredEffects;
 	}
 
-	public List<DamageSource> getIgnoredDamageSources() {
-		return this.settings.ignoredDamageSources;
+	public List<DamageSource> getIgnoredDamageSources(DamageSources sources) {
+		return this.settings.ignoredDamageSourcesInner.apply(sources);
 	}
 
 	public ParticleEffect getParticle() {
@@ -98,7 +101,7 @@ public abstract class AbstractMoobloom {
 		return this.settings.secondarySpawnEggColor;
 	}
 
-	public ItemGroup getSpawnEggItemGroup() {
+	public RegistryKey<ItemGroup> getSpawnEggItemGroup() {
 		return this.settings.spawnEggItemGroup;
 	}
 
@@ -115,13 +118,13 @@ public abstract class AbstractMoobloom {
 		protected List<Block> validBlocks;
 		protected boolean canPlaceBlocks;
 		protected List<StatusEffect> ignoredEffects;
-		protected List<DamageSource> ignoredDamageSources;
+		protected Function<DamageSources, List<DamageSource>> ignoredDamageSourcesInner;
 		protected ParticleEffect particle;
 		protected Identifier lootTable;
 		protected SpawnEntry spawnEntry;
 		protected int primarySpawnEggColor;
 		protected int secondarySpawnEggColor;
-		protected ItemGroup spawnEggItemGroup;
+		protected RegistryKey<ItemGroup> spawnEggItemGroup;
 		protected MoobloomConfigCategory configCategory;
 
 		public Builder(Identifier defaultLootTable) {
@@ -130,7 +133,7 @@ public abstract class AbstractMoobloom {
 			this.validBlocks = ImmutableList.of(Blocks.GRASS_BLOCK);
 			this.canPlaceBlocks = true;
 			this.ignoredEffects = new ArrayList<>();
-			this.ignoredDamageSources = new ArrayList<>();
+			this.ignoredDamageSourcesInner = (sources) -> new ArrayList<>();
 			this.lootTable = defaultLootTable;
 		}
 	}

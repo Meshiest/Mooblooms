@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -21,12 +22,14 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.tag.BlockTags;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -214,8 +217,8 @@ public class Cluckshroom extends AbstractMoobloom {
 		 * @param damageSources a list of damage sources
 		 * @return this builder for chaining
 		 */
-		public Cluckshroom.Builder ignoredDamageSources(List<DamageSource> damageSources) {
-			this.ignoredDamageSources = damageSources;
+		public Cluckshroom.Builder ignoredDamageSources(Function<DamageSources, List<DamageSource>> damageSources) {
+			this.ignoredDamageSourcesInner = damageSources;
 			return this;
 		}
 
@@ -279,7 +282,7 @@ public class Cluckshroom extends AbstractMoobloom {
 		 * @param group          an item group
 		 * @return this builder for chaining
 		 */
-		public Cluckshroom.Builder spawnEgg(int primaryColor, int secondaryColor, ItemGroup group) {
+		public Cluckshroom.Builder spawnEgg(int primaryColor, int secondaryColor, RegistryKey<ItemGroup> group) {
 			this.primarySpawnEggColor = primaryColor;
 			this.secondarySpawnEggColor = secondaryColor;
 			this.spawnEggItemGroup = group;

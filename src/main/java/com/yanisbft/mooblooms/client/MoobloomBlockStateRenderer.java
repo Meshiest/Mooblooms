@@ -28,44 +28,45 @@ public class MoobloomBlockStateRenderer<T extends MoobloomEntity> extends Featur
 	@Override
 	public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, MoobloomEntity entity,
 			float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-		if (!entity.isBaby() && !entity.isInvisible()) {
-			BlockRenderManager manager = MinecraftClient.getInstance().getBlockRenderManager();
-			BlockState state = entity.settings.getBlockState();
-			Vector3f scale = entity.settings.getBlockStateRendererScale();
-			Vec3d translation = entity.settings.getBlockStateRendererTranslation();
-			int overlay = LivingEntityRenderer.getOverlay(entity, 0.0F);
+		if (entity.isBaby() || entity.isInvisible())
+			return;
 
-			// Head block
-			matrices.push();
-			this.getContextModel().getHead().rotate(matrices);
-			matrices.translate(0.0D, -0.699999988079071D, -0.20000000298023224D);
-			matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-78.0F));
-			matrices.scale(scale.x(), scale.y(), scale.z());
-			matrices.translate(translation.getX(), translation.getY(), translation.getZ());
-			manager.renderBlockAsEntity(state, matrices, vertexConsumers, light, overlay);
-			matrices.pop();
+		BlockRenderManager manager = MinecraftClient.getInstance().getBlockRenderManager();
+		BlockState state = entity.settings.getBlockState();
+		Vector3f scale = entity.settings.getBlockStateRendererScale();
+		Vec3d translation = entity.settings.getBlockStateRendererTranslation();
+		int overlay = LivingEntityRenderer.getOverlay(entity, 0.0F);
 
-			// Middle block
-			matrices.push();
-			matrices.translate(0.20000000298023224D, -0.3499999940395355D, 0.5D);
-			matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(42.0F));
-			matrices.translate(0.10000000149011612D, 0.0D, -0.6000000238418579D);
-			float degrees_2 = entity.isSuncower() ? -120.0F : -48.0F;
-			matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(degrees_2));
-			matrices.scale(scale.x(), scale.y(), scale.z());
-			matrices.translate(translation.getX(), translation.getY(), translation.getZ());
-			manager.renderBlockAsEntity(state, matrices, vertexConsumers, light, overlay);
-			matrices.pop();
+		// Head block
+		matrices.push();
+		this.getContextModel().getHead().rotate(matrices);
+		matrices.translate(0.0D, -0.699999988079071D, -0.20000000298023224D);
+		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-78.0F));
+		matrices.scale(scale.x(), scale.y(), scale.z());
+		matrices.translate(translation.getX(), translation.getY(), translation.getZ());
+		manager.renderBlockAsEntity(state, matrices, vertexConsumers, light, overlay);
+		matrices.pop();
 
-			// Tail block
-			matrices.push();
-			matrices.translate(0.20000000298023224D, -0.3499999940395355D, 0.5D);
-			float degrees_1 = entity.isSuncower() ? -78.0F : -48.0F;
-			matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(degrees_1));
-			matrices.scale(scale.x(), scale.y(), scale.z());
-			matrices.translate(translation.getX(), translation.getY(), translation.getZ());
-			manager.renderBlockAsEntity(state, matrices, vertexConsumers, light, overlay);
-			matrices.pop();
-		}
+		// Middle block
+		matrices.push();
+		matrices.translate(0.20000000298023224D, -0.3499999940395355D, 0.5D);
+		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(42.0F));
+		matrices.translate(0.10000000149011612D, 0.0D, -0.6000000238418579D);
+		float degrees_2 = entity.isSuncower() ? -120.0F : -48.0F;
+		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(degrees_2));
+		matrices.scale(scale.x(), scale.y(), scale.z());
+		matrices.translate(translation.getX(), translation.getY(), translation.getZ());
+		manager.renderBlockAsEntity(state, matrices, vertexConsumers, light, overlay);
+		matrices.pop();
+
+		// Tail block
+		matrices.push();
+		matrices.translate(0.20000000298023224D, -0.3499999940395355D, 0.5D);
+		float degrees_1 = entity.isSuncower() ? -78.0F : -48.0F;
+		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(degrees_1));
+		matrices.scale(scale.x(), scale.y(), scale.z());
+		matrices.translate(translation.getX(), translation.getY(), translation.getZ());
+		manager.renderBlockAsEntity(state, matrices, vertexConsumers, light, overlay);
+		matrices.pop();
 	}
 }

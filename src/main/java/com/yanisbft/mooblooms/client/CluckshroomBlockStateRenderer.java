@@ -24,31 +24,33 @@ public class CluckshroomBlockStateRenderer<T extends CluckshroomEntity>
 		super(context);
 	}
 
+	@Override
 	public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CluckshroomEntity entity,
 			float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-		if (!entity.isBaby() && !entity.isInvisible()) {
-			BlockRenderManager blockRenderManager = MinecraftClient.getInstance().getBlockRenderManager();
-			BlockState state = entity.settings.getBlockState();
-			Vector3f scale = entity.settings.getBlockStateRendererScale();
-			Vec3d translation = entity.settings.getBlockStateRendererTranslation();
-			int overlay = LivingEntityRenderer.getOverlay(entity, 0.0F);
+		if (entity.isBaby() || entity.isInvisible())
+			return;
 
-			matrices.push();
-			matrices.translate(0.0D, 0.36D, 0.15D);
-			matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-6.0F));
-			matrices.scale(scale.x(), scale.y(), scale.z());
-			matrices.translate(translation.getX(), translation.getY(), translation.getZ());
-			blockRenderManager.renderBlockAsEntity(state, matrices, vertexConsumers, light, overlay);
-			matrices.pop();
+		BlockRenderManager blockRenderManager = MinecraftClient.getInstance().getBlockRenderManager();
+		BlockState state = entity.settings.getBlockState();
+		Vector3f scale = entity.settings.getBlockStateRendererScale();
+		Vec3d translation = entity.settings.getBlockStateRendererTranslation();
+		int overlay = LivingEntityRenderer.getOverlay(entity, 0.0F);
 
-			matrices.push();
-			this.getContextModel().getHead().rotate(matrices);
-			matrices.translate(0.02D, -0.8D, -0.03D);
-			matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-48.0F));
-			matrices.scale(scale.x(), scale.y(), scale.z());
-			matrices.translate(translation.getX(), translation.getY(), translation.getZ());
-			blockRenderManager.renderBlockAsEntity(state, matrices, vertexConsumers, light, overlay);
-			matrices.pop();
-		}
+		matrices.push();
+		matrices.translate(0.0D, 0.36D, 0.15D);
+		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-6.0F));
+		matrices.scale(scale.x(), scale.y(), scale.z());
+		matrices.translate(translation.getX(), translation.getY(), translation.getZ());
+		blockRenderManager.renderBlockAsEntity(state, matrices, vertexConsumers, light, overlay);
+		matrices.pop();
+
+		matrices.push();
+		this.getContextModel().getHead().rotate(matrices);
+		matrices.translate(0.02D, -0.8D, -0.03D);
+		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-48.0F));
+		matrices.scale(scale.x(), scale.y(), scale.z());
+		matrices.translate(translation.getX(), translation.getY(), translation.getZ());
+		blockRenderManager.renderBlockAsEntity(state, matrices, vertexConsumers, light, overlay);
+		matrices.pop();
 	}
 }
